@@ -11,7 +11,6 @@ resource "azurerm_virtual_network" "main" {
 
   tags = merge(var.default_tags,
     var.application_tags,
-    map("Name", "vn-${var.vn_identifier != "" ? "${var.vn_identifier}-" : ""}${var.resource_group_name}-${local.location_sanitize}"),
-    map("module-source", "/home/ukatru/cloud/azure/terraform-modules/modules/network/azure_vn")
+    tomap({"Name"="vn-${var.vn_identifier != "" ? "${var.vn_identifier}-" : ""}${var.resource_group_name}-${local.location_sanitize}"}),
   )
 }
