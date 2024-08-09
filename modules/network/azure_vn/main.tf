@@ -3,7 +3,6 @@ locals {
 }
 resource "azurerm_virtual_network" "main" {
   count               = var.create_vpc == true ? 1 : 0
-  provider            = azurerm.target-account
   resource_group_name = var.resource_group_name
   address_space       = var.vn_address_space
   location            = var.azure_location
