@@ -1,7 +1,3 @@
-provider "azurerm" {
-  alias = "target-account"
-}
-
 variable "azure_location" {}
 
 variable "resource_group_name" {
