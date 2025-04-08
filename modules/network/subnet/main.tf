@@ -3,7 +3,6 @@ locals {
 }
 
 resource "azurerm_subnet" "target_subnets" {
-  provider            = azurerm.target-account
   resource_group_name = var.resource_group_name
   virtual_network_name = var.vnet_name
   #for_each = var.subnet_network_rules
@@ -24,7 +23,6 @@ resource "azurerm_subnet" "target_subnets" {
 # Network security group
 #=================================================
 resource "azurerm_network_security_group" "network_security_group" {
-    provider            = azurerm.target-account
   count = var.create_network_security_group ? 1 : 0
   depends_on = [ azurerm_subnet.target_subnets ]
 
@@ -36,14 +34,13 @@ resource "azurerm_network_security_group" "network_security_group" {
 
   tags = merge(
    var.application_tags,
-   map("Name", "network-sg-${var.subnet_identifier != "" ? "${var.subnet_identifier}-" : ""}${var.resource_group_name}-${local.location_sanitize}"),
-    map("module-source", "/home/ukatru/cloud/azure/terraform-modules/modules/network/subnet")
+   tomap("Name" = "network-sg-${var.subnet_identifier != "" ? "${var.subnet_identifier}-" : ""}${var.resource_group_name}-${local.location_sanitize}"),
+    tomap("module-source" = "/home/ukatru/cloud/azure/terraform-modules/modules/network/subnet")
   )
 }
 
 
 resource "azurerm_network_security_rule" "network_security_rule" {
-   provider            = azurerm.target-account
 
   count = var.create_network_security_group ? length(var.network_security_group_rules) : 0
   resource_group_name         = var.resource_group_name
@@ -63,7 +60,6 @@ resource "azurerm_network_security_rule" "network_security_rule" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_network_security_group_association" {
-  provider            = azurerm.target-account  
   #for_each = azurerm_subnet.target_subnets
    #for_each =  azurerm_subnet.target_subnets ? var.network_security_group_rules : 0
   depends_on = [ azurerm_subnet.target_subnets, azurerm_network_security_group.network_security_group,azurerm_network_security_rule.network_security_rule]
