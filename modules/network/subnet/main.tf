@@ -34,9 +34,9 @@ resource "azurerm_network_security_group" "network_security_group" {
 
   tags = merge(
    var.application_tags,
-   tomap("Name" = "network-sg-${var.subnet_identifier != "" ? "${var.subnet_identifier}-" : ""}${var.resource_group_name}-${local.location_sanitize}"),
-    tomap("module-source" = "/home/ukatru/cloud/azure/terraform-modules/modules/network/subnet")
-  )
+   {"Name" = "network-sg-${var.subnet_identifier != "" ? "${var.subnet_identifier}-" : ""}${var.resource_group_name}-${local.location_sanitize}",
+    "module-source" = "/home/ukatru/cloud/azure/terraform-modules/modules/network/subnet"
+}
 }
 
 
